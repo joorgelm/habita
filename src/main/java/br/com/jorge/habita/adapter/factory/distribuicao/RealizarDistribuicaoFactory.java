@@ -10,11 +10,11 @@ import org.springframework.context.annotation.Configuration;
 public class RealizarDistribuicaoFactory {
 
     @Bean
-    public RealizarDistribuicaoUsecase createRealizarDistribuicaoUsecase(DistribuicaoRepository DistribuicaoRepository, FamiliaRepository familiaRepository) {
+    public RealizarDistribuicaoUsecase createRealizarDistribuicaoUsecase(DistribuicaoRepository distribuicaoRepository, FamiliaRepository familiaRepository) {
         return RealizarDistribuicaoUsecase
                 .builder()
                 .familiaRepository(familiaRepository)
-                .distribuicaoRepository(DistribuicaoRepository)
+                .distribuicaoRepository(distribuicaoRepository)
                 .build();
     }
 }

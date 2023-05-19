@@ -2,6 +2,7 @@ package br.com.jorge.habita.adapter.controller.familia;
 
 import br.com.jorge.habita.application.usecase.familia.cadastrar.CadastrarFamiliaInput;
 import br.com.jorge.habita.application.usecase.familia.cadastrar.CadastrarFamiliaUsecase;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,8 +18,8 @@ public class FamiliaController {
 
     private CadastrarFamiliaUsecase cadastrarFamiliaUsecase;
 
-    @PostMapping
-    public ResponseEntity<Void> cadastrar(@RequestBody CadastrarFamiliaInput cadastrarFamiliaInput) {
+    @PostMapping//todo: alterar para uma resposta 200 com msg de sucesso
+    public ResponseEntity<Void> cadastrar(@RequestBody @Valid CadastrarFamiliaInput cadastrarFamiliaInput) {
         cadastrarFamiliaUsecase.cadastrarFamilia(cadastrarFamiliaInput);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

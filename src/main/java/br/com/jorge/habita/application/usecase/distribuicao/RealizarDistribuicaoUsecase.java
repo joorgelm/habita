@@ -1,12 +1,15 @@
 package br.com.jorge.habita.application.usecase.distribuicao;
 
-import br.com.jorge.habita.adapter.repository.FamiliaRepository;
 import br.com.jorge.habita.adapter.repository.DistribuicaoRepository;
+import br.com.jorge.habita.adapter.repository.FamiliaRepository;
+import br.com.jorge.habita.domain.entity.Distribuicao;
 import br.com.jorge.habita.domain.entity.Familia;
 import br.com.jorge.habita.domain.entity.Membro;
+import br.com.jorge.habita.domain.exceptio.DistribuicaoVaziaException;
+import jakarta.transaction.Transactional;
 import lombok.Builder;
-import org.springframework.data.domain.PageRequest;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Builder
@@ -15,10 +18,25 @@ public class RealizarDistribuicaoUsecase {
     private DistribuicaoRepository distribuicaoRepository;
     private FamiliaRepository familiaRepository;
 
-    public RealizarDistribuicaoOutput sortear() {
+    @Transactional
+    public RealizarDistribuicaoOutput sortear(Integer quantidadeCasas) {
+        List<Familia> familiasContempladas = familiaRepository.findByDistribuicaoIsNullOrderByPontuacaoDesc(quantidadeCasas);
 
-        // marcar a familia como contemplada
-        List<Familia> familiasContempladas = familiaRepository.findByOrderByPontuacaoDesc(PageRequest.ofSize(3));
+        if (familiasContempladas.isEmpty())
+            throw new DistribuicaoVaziaException();
+
+        Distribuicao distribuicao = Distribuicao
+                .builder()
+                .distribuicaoData(LocalDateTime.now())
+                .build();
+
+        Distribuicao save = distribuicaoRepository.save(distribuicao);
+
+        familiasContempladas.forEach(familia -> {
+            familia.setDistribuicao(save);
+        });
+
+        familiaRepository.saveAll(familiasContempladas);
 
         List<RealizarDistribuicaoOutput.RealizarDistribuicaoFamiliaOutput> familiasContempladasOutput = familiasContempladas
                 .stream()

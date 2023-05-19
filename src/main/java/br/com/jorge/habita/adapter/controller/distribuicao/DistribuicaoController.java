@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @AllArgsConstructor
@@ -15,14 +16,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class DistribuicaoController {
 
     private RealizarDistribuicaoUsecase realizarDistribuicaoUsecase;
-
-    // todo: receber quantidade de casas a serem sorteadas
-    //todo: receber via queryparam e valor default 1
     @GetMapping
-    public ResponseEntity<RealizarDistribuicaoOutput> realizarDistribuicao() {
-        RealizarDistribuicaoOutput DistribuicaoOutput = realizarDistribuicaoUsecase.sortear();
+    public ResponseEntity<RealizarDistribuicaoOutput> realizarDistribuicao(@RequestParam(name = "qtd", defaultValue = "1") Integer quantidadeCasas) {
+        RealizarDistribuicaoOutput distribuicaoOutput = realizarDistribuicaoUsecase.sortear(quantidadeCasas);
 
-        return new ResponseEntity<>(DistribuicaoOutput, HttpStatus.OK);
+        return new ResponseEntity<>(distribuicaoOutput, HttpStatus.OK);
     }
 
 }
