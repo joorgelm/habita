@@ -17,6 +17,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -36,7 +37,7 @@ public class Familia {
     @Column(name = "renda_total", nullable = false)
     private BigDecimal rendaTotal;
 
-    @Column(name = "pontuacao")
+    @Column(name = "pontuacao", nullable = true)
     private Integer pontuacao;
 
     @ManyToOne(cascade = CascadeType.ALL)
@@ -45,6 +46,9 @@ public class Familia {
 
     @OneToMany(mappedBy = "familia")
     private List<Membro> membros;
+
+    @Column(name = "data_cadastro")
+    private LocalDateTime dataCadastro;
 
     public void atualizarPontuacao(List<CriterioAvalicaoStrategy> criterioAvalicaoStrategies) {
                 this.setPontuacao(calcularPontuacao(criterioAvalicaoStrategies));

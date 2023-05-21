@@ -5,10 +5,13 @@ import br.com.jorge.habita.domain.entity.Familia;
 import br.com.jorge.habita.domain.entity.Membro;
 import lombok.experimental.UtilityClass;
 
+import java.time.LocalDateTime;
+
 @UtilityClass
 public class CadastrarFamiliaConverter {
     public static Familia converter(CadastrarFamiliaInput input) {
         return Familia.builder()
+                .dataCadastro(LocalDateTime.now())
                 .rendaTotal(input.getRendaTotal())
                 .build();
     }

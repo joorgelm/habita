@@ -1,6 +1,23 @@
 version: '3'
 services:
 
+  habita-api:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: habita-api
+    env_file:
+      - .env.docker
+    command: java -jar app.jar
+    volumes:
+      - ./habita/src:/habita/src
+    ports:
+      - 8080:8080
+    expose:
+      - 8080
+    depends_on:
+      - postgresql
+
   postgresql:
     container_name: habita-database
     image: postgres:14.8
