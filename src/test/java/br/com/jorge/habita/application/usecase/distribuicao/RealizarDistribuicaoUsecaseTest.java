@@ -2,9 +2,14 @@ package br.com.jorge.habita.application.usecase.distribuicao;
 
 import br.com.jorge.habita.adapter.repository.DistribuicaoRepository;
 import br.com.jorge.habita.adapter.repository.FamiliaRepository;
+import br.com.jorge.habita.application.usecase.distribuicao.converter.RealizarDistribuicaoConverter;
 import br.com.jorge.habita.domain.entity.Distribuicao;
 import br.com.jorge.habita.domain.entity.Familia;
 import br.com.jorge.habita.domain.entity.Membro;
+import br.com.jorge.habita.domain.exception.DistribuicaoIncompletaException;
+import br.com.jorge.habita.domain.strategy.CriterioAvalicaoStrategy;
+import br.com.jorge.habita.domain.strategy.DependentesStrategy;
+import br.com.jorge.habita.domain.strategy.RendaStrategy;
 import net.datafaker.Faker;
 import org.junit.Assert;
 import org.junit.Before;
@@ -19,6 +24,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -37,46 +43,59 @@ public class RealizarDistribuicaoUsecaseTest {
     @Captor
     private ArgumentCaptor<Distribuicao> distribuicaoCaptor;
 
+    private List<CriterioAvalicaoStrategy> criterioAvalicaoStrategies;
+
     private static final Faker faker = new Faker();
 
     private RealizarDistribuicaoUsecase usecase;
     @Before
     public void setup() {
-//        MockitoAnnotations.openMocks(this);
         usecase = RealizarDistribuicaoUsecase
                 .builder()
+                .criterioAvalicaoStrategies(buscarCriterios())
                 .distribuicaoRepository(distribuicaoRepository)
                 .familiaRepository(familiaRepository)
                 .build();
     }
 
+    private List<CriterioAvalicaoStrategy> buscarCriterios() {
+        return List.of(
+                DependentesStrategy.builder().build(),
+                RendaStrategy.builder().build()
+                );
+    }
+
     @Test
     public void deveRealizarDistribuicao() {
         int qtdCasas = 3;
+        int qtdTotalFamilias = 5;
+        List<Familia> familiasMock = mockFamiliaList(qtdTotalFamilias);
+
+        Mockito.when(familiaRepository.findAll())
+                .thenReturn(familiasMock);
+
+        List<Familia> familiasContempladasMock = familiasMock
+                .stream()
+                .sorted(Comparator.comparing(Familia::getPontuacao).reversed())
+                .limit(qtdCasas)
+                .toList();
         Mockito.when(familiaRepository.findByDistribuicaoIsNullOrderByPontuacaoDesc(qtdCasas))
-                .thenReturn(mockFamiliaList(qtdCasas));
+                .thenReturn(familiasContempladasMock);
 
-        RealizarDistribuicaoOutput sortear = usecase.sortear(qtdCasas);
+        RealizarDistribuicaoOutput distribuicao = usecase.realizarDistribuicao(qtdCasas);
 
-        Mockito.verify(distribuicaoRepository, Mockito.times(1)).save(distribuicaoCaptor.capture());
+        Mockito.verify(familiaRepository, Mockito.times(2)).saveAll(listFamiliaCaptor.capture());
+        Assert.assertEquals(distribuicao.getFamiliasContempladas().size(), familiasContempladasMock.size());
+        Assert.assertEquals(RealizarDistribuicaoConverter.converter(familiasContempladasMock), distribuicao);
+    }
 
-        Mockito.verify(familiaRepository, Mockito.times(1)).saveAll(listFamiliaCaptor.capture());
+    @Test(expected = DistribuicaoIncompletaException.class)
+    public void deveFalharAoTentarRealizarDistribuicaoSemFamiliasElegiveis() {
+        int qtdCasas = faker.number().numberBetween(2, 20);
+        Mockito.when(familiaRepository.findByDistribuicaoIsNullOrderByPontuacaoDesc(qtdCasas))
+                .thenReturn(mockFamiliaList(qtdCasas - 1));
 
-        Assert.assertEquals(qtdCasas, listFamiliaCaptor.getValue().size());
-
-        /*
-        ArgumentCaptor<String> argumentCaptor = ArgumentCaptor.forClass(String.class);
-
-        // Chama o método a ser testado com um argumento específico
-        myClassMock.doSomething("argumento de teste");
-
-        // Verifica se o método foi chamado com o argumento correto
-        verify(myClassMock).doSomething(argumentCaptor.capture());
-
-        // Obtém o argumento capturado
-        String argumentCapturado = argumentCaptor.getValue();
-        * */
-
+        usecase.realizarDistribuicao(qtdCasas);
     }
 
     private List<Familia> mockFamiliaList(int qtdFamilia) {
@@ -109,10 +128,5 @@ public class RealizarDistribuicaoUsecaseTest {
                 .nome(faker.name().fullName())
                 .idade(faker.number().numberBetween(1, 100))
                 .build();
-    }
-
-    @Test
-    public void deveFalharQuandoNaoHouverSorteados() {
-        RealizarDistribuicaoOutput sortear = usecase.sortear(5);
     }
 }

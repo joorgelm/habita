@@ -1,5 +1,6 @@
 package br.com.jorge.habita.domain.entity;
 
+import br.com.jorge.habita.domain.strategy.CriterioAvalicaoStrategy;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,9 +14,7 @@ import jakarta.persistence.SequenceGenerator;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -46,6 +45,17 @@ public class Familia {
 
     @OneToMany(mappedBy = "familia")
     private List<Membro> membros;
+
+    public void atualizarPontuacao(List<CriterioAvalicaoStrategy> criterioAvalicaoStrategies) {
+                this.setPontuacao(calcularPontuacao(criterioAvalicaoStrategies));
+    }
+
+    private Integer calcularPontuacao(List<CriterioAvalicaoStrategy> criterioAvalicaoStrategies) {
+        return  criterioAvalicaoStrategies
+                .stream()
+                .map(criterioAvalicaoStrategy -> criterioAvalicaoStrategy.obterPontuacao(this))
+                .reduce(0, Integer::sum);
+    }
     public long quantiadeDependentes() {
         return this.membros.stream().filter(membro -> membro.getIdade() < IDADE_MAXIMA).count();
     }

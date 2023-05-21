@@ -24,6 +24,7 @@ CREATE TABLE familia
 (
     id          INTEGER PRIMARY KEY ,
     pontuacao   INTEGER,
+    distribuicao_id BIGINT CONSTRAINT fk_familia_distribuicao_id REFERENCES distribuicao,
     renda_total NUMERIC(38, 2)
 );
 
@@ -32,5 +33,5 @@ CREATE TABLE membro
     id         INTEGER PRIMARY KEY ,
     idade      INTEGER,
     nome       VARCHAR(255),
-    familia_id BIGINT CONSTRAINT fk280x95kat47v8h8v669g26qow REFERENCES familia
+    familia_id BIGINT CONSTRAINT fk_membro_familia_id REFERENCES familia
 );

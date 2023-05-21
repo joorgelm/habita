@@ -18,9 +18,9 @@ public class FamiliaController {
 
     private CadastrarFamiliaUsecase cadastrarFamiliaUsecase;
 
-    @PostMapping//todo: alterar para uma resposta 200 com msg de sucesso
+    @PostMapping
     public ResponseEntity<Void> cadastrar(@RequestBody @Valid CadastrarFamiliaInput cadastrarFamiliaInput) {
         cadastrarFamiliaUsecase.cadastrarFamilia(cadastrarFamiliaInput);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }

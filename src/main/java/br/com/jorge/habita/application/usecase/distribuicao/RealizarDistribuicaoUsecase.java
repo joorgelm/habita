@@ -2,10 +2,11 @@ package br.com.jorge.habita.application.usecase.distribuicao;
 
 import br.com.jorge.habita.adapter.repository.DistribuicaoRepository;
 import br.com.jorge.habita.adapter.repository.FamiliaRepository;
+import br.com.jorge.habita.application.usecase.distribuicao.converter.RealizarDistribuicaoConverter;
 import br.com.jorge.habita.domain.entity.Distribuicao;
 import br.com.jorge.habita.domain.entity.Familia;
-import br.com.jorge.habita.domain.entity.Membro;
-import br.com.jorge.habita.domain.exceptio.DistribuicaoVaziaException;
+import br.com.jorge.habita.domain.exception.DistribuicaoIncompletaException;
+import br.com.jorge.habita.domain.strategy.CriterioAvalicaoStrategy;
 import jakarta.transaction.Transactional;
 import lombok.Builder;
 
@@ -17,55 +18,47 @@ public class RealizarDistribuicaoUsecase {
 
     private DistribuicaoRepository distribuicaoRepository;
     private FamiliaRepository familiaRepository;
+    private List<CriterioAvalicaoStrategy> criterioAvalicaoStrategies;
 
     @Transactional
-    public RealizarDistribuicaoOutput sortear(Integer quantidadeCasas) {
-        List<Familia> familiasContempladas = familiaRepository.findByDistribuicaoIsNullOrderByPontuacaoDesc(quantidadeCasas);
+    public RealizarDistribuicaoOutput realizarDistribuicao(Integer quantidadeCasas) {
+        classificarFamilias();
+        List<Familia> familiasContempladas = buscarFamiliasContempladas(quantidadeCasas);
+        vincularDistribuicao(familiasContempladas);
 
-        if (familiasContempladas.isEmpty())
-            throw new DistribuicaoVaziaException();
+        return RealizarDistribuicaoConverter.converter(familiasContempladas);
+    }
 
+    private void vincularDistribuicao(List<Familia> familiasContempladas) {
+        familiasContempladas.forEach(familia -> {
+            familia.setDistribuicao(gerarRegistroDeDistribuicao());
+        });
+        familiaRepository.saveAll(familiasContempladas);
+    }
+
+    private Distribuicao gerarRegistroDeDistribuicao() {
         Distribuicao distribuicao = Distribuicao
                 .builder()
                 .distribuicaoData(LocalDateTime.now())
                 .build();
 
-        Distribuicao save = distribuicaoRepository.save(distribuicao);
-
-        familiasContempladas.forEach(familia -> {
-            familia.setDistribuicao(save);
-        });
-
-        familiaRepository.saveAll(familiasContempladas);
-
-        List<RealizarDistribuicaoOutput.RealizarDistribuicaoFamiliaOutput> familiasContempladasOutput = familiasContempladas
-                .stream()
-                .map(RealizarDistribuicaoUsecase::familiaOutputConverter)
-                .toList();
-
-        return RealizarDistribuicaoOutput.
-                builder()
-                .familiasContempladas(familiasContempladasOutput)
-                .build();
+        return distribuicaoRepository.save(distribuicao);
     }
 
-    private static RealizarDistribuicaoOutput.RealizarDistribuicaoFamiliaOutput familiaOutputConverter(Familia familia) {
-        List<RealizarDistribuicaoOutput.RealizarDistribuicaoMembroOutput> membrosOutput = familia.getMembros()
-                .stream()
-                .map(RealizarDistribuicaoUsecase::membroOutputConverter)
-                .toList();
+    private List<Familia> buscarFamiliasContempladas(Integer quantidadeCasas) {
+        List<Familia> familiasContempladas = familiaRepository.findByDistribuicaoIsNullOrderByPontuacaoDesc(quantidadeCasas);
 
-        return RealizarDistribuicaoOutput.RealizarDistribuicaoFamiliaOutput
-                .builder()
-                .id(familia.getId())
-                .membros(membrosOutput)
-                .build();
+        if (familiasContempladas.size() < quantidadeCasas)
+            throw new DistribuicaoIncompletaException();
+
+        return familiasContempladas;
     }
-
-    private static RealizarDistribuicaoOutput.RealizarDistribuicaoMembroOutput membroOutputConverter(Membro membro) {
-        return RealizarDistribuicaoOutput.RealizarDistribuicaoMembroOutput
-                .builder()
-                .nome(membro.getNome())
-                .build();
+    private void classificarFamilias() {
+        familiaRepository.saveAll(
+                familiaRepository.findAll()
+                        .stream()
+                        .peek(familia -> familia.atualizarPontuacao(criterioAvalicaoStrategies))
+                        .toList()
+        );
     }
 }

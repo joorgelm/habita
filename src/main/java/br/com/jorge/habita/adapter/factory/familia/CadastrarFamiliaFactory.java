@@ -13,12 +13,9 @@ import java.util.List;
 public class CadastrarFamiliaFactory {
 
     @Bean
-    public CadastrarFamiliaUsecase createCadastrarFamiliaUsecase(FamiliaRepository familiaRepository,
-                                                                 List<CriterioAvalicaoStrategy> criterioAvalicaoStrategies,
-                                                                 MembroRepository membroRepository) {
+    public CadastrarFamiliaUsecase createCadastrarFamiliaUsecase(FamiliaRepository familiaRepository, MembroRepository membroRepository) {
         return CadastrarFamiliaUsecase
                 .builder()
-                .criterioAvalicaoStrategies(criterioAvalicaoStrategies)
                 .membroRepository(membroRepository)
                 .familiaRepository(familiaRepository)
                 .build();

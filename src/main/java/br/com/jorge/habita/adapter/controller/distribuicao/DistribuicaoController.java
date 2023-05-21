@@ -18,7 +18,7 @@ public class DistribuicaoController {
     private RealizarDistribuicaoUsecase realizarDistribuicaoUsecase;
     @GetMapping
     public ResponseEntity<RealizarDistribuicaoOutput> realizarDistribuicao(@RequestParam(name = "qtd", defaultValue = "1") Integer quantidadeCasas) {
-        RealizarDistribuicaoOutput distribuicaoOutput = realizarDistribuicaoUsecase.sortear(quantidadeCasas);
+        RealizarDistribuicaoOutput distribuicaoOutput = realizarDistribuicaoUsecase.realizarDistribuicao(quantidadeCasas);
 
         return new ResponseEntity<>(distribuicaoOutput, HttpStatus.OK);
     }

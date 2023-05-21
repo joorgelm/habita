@@ -9,15 +9,6 @@ import java.util.List;
 
 @Repository
 public interface FamiliaRepository extends JpaRepository<Familia, Long> {
-
-/*        @Query(
-                nativeQuery = true,
-                value = "SELECT * FROM Familia f WHERE f.distribuicao_id IS NULL ORDER BY f.pontuacao DESC LIMIT :qtd"
-        )
-        List<Familia> findByOrderByPontuacaoDesc(@Param("qtd") Integer qtd);*/
-
-//        List<Familia> findByDistribuicaoIsNullAndOrderByPontuacaoDesc();
-
         List<Familia> findByDistribuicaoIsNullOrderByPontuacaoDesc(PageRequest pageRequest);
 
         default List<Familia> findByDistribuicaoIsNullOrderByPontuacaoDesc(Integer qtd) {
