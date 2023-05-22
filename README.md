@@ -1,9 +1,9 @@
 <!-- SOBRE O PROJETO -->
-## API Rest para o gerênciamento de casas populares
+## API Rest para o gerenciamento de casas populares
 
 Autor: Jorge Melgarejo
 
-### Técnologias utilizadas
+### Tecnologias utilizadas
 
 * Java 17
 * Spring Boot 3
@@ -80,11 +80,15 @@ curl --request POST \
     Date: Sun, 21 May 2023 21:28:06 GMT
 
 ## Realizar distribuição de casas
-`GET /distribuicao?qtd=<QUANTIDADE DE CASAS>`
+`POST /distribuicao`
 
 ```
-curl --request GET \
-  --url 'http://localhost:8080/distribuicao?qtd=1'
+curl --request POST \
+  --url http://localhost:8080/distribuicao \
+  --header 'Content-Type: application/json' \
+  --data '{
+	"qtdCasas": 1
+}'
 ```
 
 ### Response
@@ -123,12 +127,12 @@ Segue uma descrição básica de cada entidade do projeto:
 
 ## Arquitetura
 A aplicação foi implementada utilizando a seguinte arquitetura:
-* **adapter** :  Responsável por tratar as operações de entrada e saída de dados, persistir no banco de dados e produzir os Beans da injeção de dependências.
-* **application**: Contém os casos de uso da aplicação, realiza operações utilizando as entidades e é responsável pela conversão de dados exigidos pela camada superior (adapter). _**(Não depende do framework Spring, apenas Java)**_.
-* **domain**: Contém as regras de negócio, os critérios de avaliação famíliar e as entidades. _**(Não depende do framework Spring, apenas Java)**_.
+* **adapter** :Responsável por tratar as operações de entrada e saída de dados, persistir no banco de dados e produzir os Beans da injeção de dependências.
+* **application**:Contém os casos de uso da aplicação, realiza operações utilizando as entidades e é responsável pela conversão de dados exigidos pela camada superior (adapter). _**(Não depende do framework Spring, apenas Java)**_.
+* **domain**:Contém as regras de negócio, os critérios de avaliação familiar e as entidades. _**(Não depende do framework Spring, apenas Java)**_.
 
-## Implementação dos critérios de avaliação famíliar
-Os critérios de avaliação famíliar são implementados através de uma interface base `CriterioAvaliacaoStrategy`.
+## Implementação dos critérios de avaliação familiar
+Os critérios de avaliação familiar são implementados através de uma interface base `CriterioAvaliacaoStrategy`.
 
 Para implementar um novo critério de avaliação, é necessário criar uma classe que implemente essa interface e implementar os métodos requiridos pela interface.
 
@@ -182,6 +186,9 @@ Feito isso, ao realizar uma distribuição, o novo critério de avaliação já 
 Durante o desenvolvimento foram identificadas algumas possíveis melhorias que não foram implementadas prezando pela 
 simplicidade da solução e tendo em vista respeitar o prazo limite de entrega. São essas:
 
-* Ter um cadastro de membros familiares mais completo, recendo CPF, e renda por pessoa (atualmente a renda é uma informação única por família).
-* Adicionar um atributo boleano para ativar ou desativar um critério de avaliação.
+* Ter um cadastro de membros familiares mais completo, recebendo CPF, e renda por pessoa (atualmente a renda é uma informação única por família).
+* Adicionar um atributo booleano para ativar ou desativar um critério de avaliação.
 * Implementar um critério de desempate para famílias com a mesma pontuação final.
+* Adicionar uma autenticação de usuários e uma camada de segurança para permitir que apenas usuários autenticados realizem o cadastro de famílias e distribuições.
+* O endpoint de realizar distribuição, realiza uma consulta que pode se tornar um problema caso exista uma grande massa de dados. Portanto, poderia ser feita de forma paginada para não carregar tantos dados em memória.
+

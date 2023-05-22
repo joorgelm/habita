@@ -1,8 +1,8 @@
-INSERT INTO familia (id, pontuacao, distribuicao_id, renda_total) VALUES (NEXT VALUE FOR seq_familia_id, 5, null, 1500.00);
-INSERT INTO familia (id, pontuacao, distribuicao_id, renda_total) VALUES (NEXT VALUE FOR seq_familia_id, 7, null, 800);
-INSERT INTO familia (id, pontuacao, distribuicao_id, renda_total) VALUES (NEXT VALUE FOR seq_familia_id, 6, null, 1000);
-INSERT INTO familia (id, pontuacao, distribuicao_id, renda_total) VALUES (NEXT VALUE FOR seq_familia_id, 3, null, 789);
-INSERT INTO familia (id, pontuacao, distribuicao_id, renda_total) VALUES (NEXT VALUE FOR seq_familia_id, 2, null, 2000);
+INSERT INTO familia (id, pontuacao,data_cadastro, distribuicao_id, renda_total) VALUES (NEXT VALUE FOR seq_familia_id, 5, '2023-05-21 10:30:00', null, 1500.00);
+INSERT INTO familia (id, pontuacao,data_cadastro, distribuicao_id, renda_total) VALUES (NEXT VALUE FOR seq_familia_id, 7, '2023-05-21 10:30:00', null, 800);
+INSERT INTO familia (id, pontuacao,data_cadastro, distribuicao_id, renda_total) VALUES (NEXT VALUE FOR seq_familia_id, 6, '2023-05-21 10:30:00', null, 1000);
+INSERT INTO familia (id, pontuacao,data_cadastro, distribuicao_id, renda_total) VALUES (NEXT VALUE FOR seq_familia_id, 3, '2023-05-21 10:30:00', null, 789);
+INSERT INTO familia (id, pontuacao,data_cadastro, distribuicao_id, renda_total) VALUES (NEXT VALUE FOR seq_familia_id, 2, '2023-05-21 10:30:00', null, 2000);
 
 INSERT INTO membro (id, idade, nome, familia_id) VALUES (NEXT VALUE FOR seq_membro_id, 57, 'Joao Silva', 1);
 INSERT INTO membro (id, idade, nome, familia_id) VALUES (NEXT VALUE FOR seq_membro_id, 50, 'Fabiana Silva', 1);

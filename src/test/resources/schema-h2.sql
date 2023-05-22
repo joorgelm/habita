@@ -24,6 +24,7 @@ CREATE TABLE familia
 (
     id          INTEGER PRIMARY KEY ,
     pontuacao   INTEGER,
+    data_cadastro TIMESTAMP,
     distribuicao_id BIGINT CONSTRAINT fk_familia_distribuicao_id REFERENCES distribuicao,
     renda_total NUMERIC(38, 2)
 );

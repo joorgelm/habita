@@ -2,14 +2,13 @@ package br.com.jorge.habita.adapter.controller.distribuicao;
 
 import br.com.jorge.habita.adapter.repository.DistribuicaoRepository;
 import br.com.jorge.habita.adapter.repository.FamiliaRepository;
+import br.com.jorge.habita.application.usecase.distribuicao.RealizarDistribuicaoInput;
 import br.com.jorge.habita.domain.entity.Distribuicao;
-import jakarta.transaction.Transactional;
+import com.google.gson.Gson;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -22,7 +21,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.time.LocalDateTime;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -43,7 +42,10 @@ public class DistribuicaoControllerTest {
 
     @Test
     public void deveRealizarDistribuicao() throws Exception {
-        ResultActions resposta = mockMvc.perform(get("/distribuicao")
+        RealizarDistribuicaoInput input = RealizarDistribuicaoInput.builder().qtdCasas(1).build();
+
+        ResultActions resposta = mockMvc.perform(post("/distribuicao")
+                .content(new Gson().toJson( input))
                 .contentType(MediaType.APPLICATION_JSON));
 
         resposta
@@ -55,9 +57,11 @@ public class DistribuicaoControllerTest {
 
     @Test
     public void deveRealizarDistribuicaoDeVariasCasas() throws Exception {
-        ResultActions resposta = mockMvc.perform(get("/distribuicao")
-                .param("qtd", "2")
-                .contentType(MediaType.APPLICATION_JSON));
+        RealizarDistribuicaoInput input = RealizarDistribuicaoInput.builder().qtdCasas(2).build();
+
+        ResultActions resposta = mockMvc.perform(post("/distribuicao")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new Gson().toJson( input)));
 
         resposta
                 .andExpect(status().is2xxSuccessful())
@@ -72,9 +76,11 @@ public class DistribuicaoControllerTest {
     public void deveFalharQuandoNaoHouverFamiliasElegiveis() throws Exception {
         marcarFamiliasComoDistribuidas();
 
-        ResultActions resposta = mockMvc.perform(get("/distribuicao")
-                .param("qtd", "3")
-                .contentType(MediaType.APPLICATION_JSON));
+        RealizarDistribuicaoInput input = RealizarDistribuicaoInput.builder().qtdCasas(3).build();
+
+        ResultActions resposta = mockMvc.perform(post("/distribuicao")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new Gson().toJson( input)));
 
         resposta
                 .andExpect(status().is4xxClientError())

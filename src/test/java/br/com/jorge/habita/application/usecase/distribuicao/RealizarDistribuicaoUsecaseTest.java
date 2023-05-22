@@ -82,7 +82,12 @@ public class RealizarDistribuicaoUsecaseTest {
         Mockito.when(familiaRepository.findByDistribuicaoIsNullOrderByPontuacaoDesc(qtdCasas))
                 .thenReturn(familiasContempladasMock);
 
-        RealizarDistribuicaoOutput distribuicao = usecase.realizarDistribuicao(qtdCasas);
+        RealizarDistribuicaoOutput distribuicao = usecase.realizarDistribuicao(
+                RealizarDistribuicaoInput
+                        .builder()
+                        .qtdCasas(qtdCasas)
+                        .build()
+        );
 
         Mockito.verify(familiaRepository, Mockito.times(2)).saveAll(listFamiliaCaptor.capture());
         Assert.assertEquals(distribuicao.getFamiliasContempladas().size(), familiasContempladasMock.size());
@@ -95,7 +100,12 @@ public class RealizarDistribuicaoUsecaseTest {
         Mockito.when(familiaRepository.findByDistribuicaoIsNullOrderByPontuacaoDesc(qtdCasas))
                 .thenReturn(mockFamiliaList(qtdCasas - 1));
 
-        usecase.realizarDistribuicao(qtdCasas);
+        usecase.realizarDistribuicao(
+                RealizarDistribuicaoInput
+                        .builder()
+                        .qtdCasas(qtdCasas)
+                        .build()
+        );
     }
 
     private List<Familia> mockFamiliaList(int qtdFamilia) {

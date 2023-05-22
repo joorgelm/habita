@@ -21,9 +21,9 @@ public class RealizarDistribuicaoUsecase {
     private List<CriterioAvalicaoStrategy> criterioAvalicaoStrategies;
 
     @Transactional
-    public RealizarDistribuicaoOutput realizarDistribuicao(Integer quantidadeCasas) {
+    public RealizarDistribuicaoOutput realizarDistribuicao(RealizarDistribuicaoInput input) {
         classificarFamilias();
-        List<Familia> familiasContempladas = buscarFamiliasContempladas(quantidadeCasas);
+        List<Familia> familiasContempladas = buscarFamiliasContempladas(input.getQtdCasas());
         vincularDistribuicao(familiasContempladas);
 
         return RealizarDistribuicaoConverter.converter(familiasContempladas);
