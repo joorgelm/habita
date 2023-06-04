@@ -13,8 +13,9 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -25,7 +26,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @SequenceGenerator(name = "seq_familia", sequenceName = "seq_familia_id", allocationSize = 1)
-@Data
+@Getter
 public class Familia {
 
     private static final int IDADE_MAXIMA = 18;
@@ -42,16 +43,18 @@ public class Familia {
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "distribuicao_id", referencedColumnName = "id", nullable = true)
+    @Setter //TODO: VERIFICAR SE E A MELHOR FORMA DE ATUALIZAR A ENTIDADE
     private Distribuicao distribuicao;
 
     @OneToMany(mappedBy = "familia")
+    @Setter //TODO: VERIFICAR SE E A MELHOR FORMA DE ATUALIZAR A ENTIDADE
     private List<Membro> membros;
 
     @Column(name = "data_cadastro")
     private LocalDateTime dataCadastro;
 
     public void atualizarPontuacao(List<CriterioAvalicaoStrategy> criterioAvalicaoStrategies) {
-                this.setPontuacao(calcularPontuacao(criterioAvalicaoStrategies));
+        this.pontuacao = calcularPontuacao(criterioAvalicaoStrategies);
     }
 
     private Integer calcularPontuacao(List<CriterioAvalicaoStrategy> criterioAvalicaoStrategies) {

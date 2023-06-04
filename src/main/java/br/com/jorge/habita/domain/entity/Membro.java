@@ -10,14 +10,14 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
 @SequenceGenerator(name = "seq_membro", sequenceName = "seq_membro_id", allocationSize = 1)
 public class Membro {
 
