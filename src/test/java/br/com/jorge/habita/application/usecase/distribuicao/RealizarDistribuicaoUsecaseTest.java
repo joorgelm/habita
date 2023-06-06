@@ -1,7 +1,7 @@
 package br.com.jorge.habita.application.usecase.distribuicao;
 
-import br.com.jorge.habita.adapter.repository.DistribuicaoRepository;
-import br.com.jorge.habita.adapter.repository.FamiliaRepository;
+import br.com.jorge.habita.application.repository.DistribuicaoRepository;
+import br.com.jorge.habita.application.repository.FamiliaRepository;
 import br.com.jorge.habita.application.usecase.distribuicao.converter.RealizarDistribuicaoConverter;
 import br.com.jorge.habita.domain.entity.Distribuicao;
 import br.com.jorge.habita.domain.entity.Familia;

@@ -1,7 +1,7 @@
 package br.com.jorge.habita.application.usecase.familia;
 
-import br.com.jorge.habita.adapter.repository.FamiliaRepository;
-import br.com.jorge.habita.adapter.repository.MembroRepository;
+import br.com.jorge.habita.application.repository.FamiliaRepository;
+import br.com.jorge.habita.application.repository.MembroRepository;
 import br.com.jorge.habita.application.usecase.familia.cadastrar.CadastrarFamiliaInput;
 import br.com.jorge.habita.application.usecase.familia.cadastrar.CadastrarFamiliaUsecase;
 import br.com.jorge.habita.domain.entity.Familia;

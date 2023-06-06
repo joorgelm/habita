@@ -1,6 +1,5 @@
 package br.com.jorge.habita.domain.entity;
 
-import br.com.jorge.habita.domain.strategy.CriterioAvalicaoStrategy;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -39,30 +38,20 @@ public class Familia {
     private BigDecimal rendaTotal;
 
     @Column(name = "pontuacao", nullable = true)
+    @Setter
     private Integer pontuacao;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "distribuicao_id", referencedColumnName = "id", nullable = true)
-    @Setter //TODO: VERIFICAR SE E A MELHOR FORMA DE ATUALIZAR A ENTIDADE
+    @Setter
     private Distribuicao distribuicao;
 
     @OneToMany(mappedBy = "familia")
-    @Setter //TODO: VERIFICAR SE E A MELHOR FORMA DE ATUALIZAR A ENTIDADE
+    @Setter
     private List<Membro> membros;
 
     @Column(name = "data_cadastro")
     private LocalDateTime dataCadastro;
-
-    public void atualizarPontuacao(List<CriterioAvalicaoStrategy> criterioAvalicaoStrategies) {
-        this.pontuacao = calcularPontuacao(criterioAvalicaoStrategies);
-    }
-
-    private Integer calcularPontuacao(List<CriterioAvalicaoStrategy> criterioAvalicaoStrategies) {
-        return  criterioAvalicaoStrategies
-                .stream()
-                .map(criterioAvalicaoStrategy -> criterioAvalicaoStrategy.obterPontuacao(this))
-                .reduce(0, Integer::sum);
-    }
     public long quantiadeDependentes() {
         return this.membros.stream().filter(membro -> membro.getIdade() < IDADE_MAXIMA).count();
     }

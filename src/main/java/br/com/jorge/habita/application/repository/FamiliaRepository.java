@@ -1,4 +1,4 @@
-package br.com.jorge.habita.adapter.repository;
+package br.com.jorge.habita.application.repository;
 
 import br.com.jorge.habita.domain.entity.Familia;
 import org.springframework.data.domain.PageRequest;
