@@ -52,7 +52,6 @@ public class RealizarDistribuicaoUsecaseTest {
     public void setup() {
         usecase = RealizarDistribuicaoUsecase
                 .builder()
-                .criterioAvalicaoStrategies(buscarCriterios())
                 .distribuicaoRepository(distribuicaoRepository)
                 .familiaRepository(familiaRepository)
                 .build();
