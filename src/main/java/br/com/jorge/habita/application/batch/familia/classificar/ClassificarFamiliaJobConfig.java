@@ -12,11 +12,11 @@ import org.springframework.context.annotation.Configuration;
 public class ClassificarFamiliaJobConfig {
 
     @Bean
-    public Job job(
+    public Job classificarFamilia(
                     JobRepository jobRepository,
                     @Qualifier("classificarFamiliaStep") Step classificarFamiliaStep
     ) {
-        return new JobBuilder("job", jobRepository)
+        return new JobBuilder("classificarFamilia", jobRepository)
                 .start(classificarFamiliaStep)
                 .build();
     }

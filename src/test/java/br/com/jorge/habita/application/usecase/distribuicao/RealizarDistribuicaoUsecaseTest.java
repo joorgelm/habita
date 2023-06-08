@@ -3,10 +3,11 @@ package br.com.jorge.habita.application.usecase.distribuicao;
 import br.com.jorge.habita.application.repository.DistribuicaoRepository;
 import br.com.jorge.habita.application.repository.FamiliaRepository;
 import br.com.jorge.habita.application.usecase.distribuicao.converter.RealizarDistribuicaoConverter;
-import br.com.jorge.habita.domain.entity.Distribuicao;
 import br.com.jorge.habita.domain.entity.Familia;
 import br.com.jorge.habita.domain.entity.Membro;
 import br.com.jorge.habita.domain.exception.DistribuicaoIncompletaException;
+import br.com.jorge.habita.domain.service.AnaliseFamiliarService;
+import br.com.jorge.habita.domain.service.DistribuicaoService;
 import br.com.jorge.habita.domain.strategy.CriterioAvalicaoStrategy;
 import br.com.jorge.habita.domain.strategy.DependentesStrategy;
 import br.com.jorge.habita.domain.strategy.RendaStrategy;
@@ -39,12 +40,6 @@ public class RealizarDistribuicaoUsecaseTest {
 
     @Captor
     private ArgumentCaptor<List<Familia>> listFamiliaCaptor;
-
-    @Captor
-    private ArgumentCaptor<Distribuicao> distribuicaoCaptor;
-
-    private List<CriterioAvalicaoStrategy> criterioAvalicaoStrategies;
-
     private static final Faker faker = new Faker();
 
     private RealizarDistribuicaoUsecase usecase;
@@ -52,6 +47,10 @@ public class RealizarDistribuicaoUsecaseTest {
     public void setup() {
         usecase = RealizarDistribuicaoUsecase
                 .builder()
+                .analiseFamiliarService(
+                        AnaliseFamiliarService.builder().criterioAvalicaoStrategies(buscarCriterios()).build()
+                )
+                .distribuicaoService(DistribuicaoService.builder().build())
                 .distribuicaoRepository(distribuicaoRepository)
                 .familiaRepository(familiaRepository)
                 .build();
