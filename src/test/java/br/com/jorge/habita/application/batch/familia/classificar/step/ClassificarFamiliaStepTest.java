@@ -1,5 +1,6 @@
 package br.com.jorge.habita.application.batch.familia.classificar.step;
 
+import br.com.jorge.habita.application.batch.familia.classificar.launcher.ClassificarFamiliaJobLauncher;
 import br.com.jorge.habita.application.repository.FamiliaRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.batch.core.BatchStatus;
@@ -24,10 +25,14 @@ class ClassificarFamiliaStepTest {
     private JobLauncherTestUtils jobLauncherTestUtils;
 
     @Autowired
+    private ClassificarFamiliaJobLauncher classificarFamiliaJobLauncher;
+
+    @Autowired
     private FamiliaRepository familiaRepository;
 
     @Test
     void deveClassificarTodasFamiliasDoBancoEmMemoria() {
+        jobLauncherTestUtils.setJobLauncher(classificarFamiliaJobLauncher);
         JobExecution jobExecution = jobLauncherTestUtils.launchStep("classificarFamiliaStep");
 
         assertEquals(BatchStatus.COMPLETED, jobExecution.getStatus());

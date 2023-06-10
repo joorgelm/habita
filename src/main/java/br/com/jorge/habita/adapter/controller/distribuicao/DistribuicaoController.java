@@ -5,6 +5,7 @@ import br.com.jorge.habita.application.usecase.distribuicao.RealizarDistribuicao
 import br.com.jorge.habita.application.usecase.distribuicao.RealizarDistribuicaoUsecase;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -19,11 +20,12 @@ public class DistribuicaoController {
 
     private RealizarDistribuicaoUsecase realizarDistribuicaoUsecase;
 
+    @SneakyThrows
     @PostMapping
-    public ResponseEntity<RealizarDistribuicaoOutput> realizarDistribuicao(@RequestBody @Valid RealizarDistribuicaoInput realizarDistribuicaoInput) {
+    public ResponseEntity<RealizarDistribuicaoOutput> realizarDistribuicao(
+            @RequestBody @Valid RealizarDistribuicaoInput realizarDistribuicaoInput
+    ) {
         RealizarDistribuicaoOutput distribuicaoOutput = realizarDistribuicaoUsecase.realizarDistribuicao(realizarDistribuicaoInput);
-
         return new ResponseEntity<>(distribuicaoOutput, HttpStatus.OK);
     }
-
 }

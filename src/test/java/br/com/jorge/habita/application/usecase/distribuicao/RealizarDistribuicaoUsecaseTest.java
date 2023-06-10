@@ -1,5 +1,6 @@
 package br.com.jorge.habita.application.usecase.distribuicao;
 
+import br.com.jorge.habita.application.batch.familia.classificar.launcher.ClassificarFamiliaJobLauncher;
 import br.com.jorge.habita.application.repository.DistribuicaoRepository;
 import br.com.jorge.habita.application.repository.FamiliaRepository;
 import br.com.jorge.habita.application.usecase.distribuicao.converter.RealizarDistribuicaoConverter;
@@ -23,6 +24,11 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobParametersInvalidException;
+import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
+import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
+import org.springframework.batch.core.repository.JobRestartException;
 
 import java.math.BigDecimal;
 import java.util.Comparator;
@@ -37,6 +43,13 @@ public class RealizarDistribuicaoUsecaseTest {
     private DistribuicaoRepository distribuicaoRepository;
     @Mock
     private FamiliaRepository familiaRepository;
+
+    @Mock
+    private ClassificarFamiliaJobLauncher jobLauncher;
+
+    @Mock
+    private Job classificarFamilia;
+
 
     @Captor
     private ArgumentCaptor<List<Familia>> listFamiliaCaptor;
@@ -53,6 +66,8 @@ public class RealizarDistribuicaoUsecaseTest {
                 .distribuicaoService(DistribuicaoService.builder().build())
                 .distribuicaoRepository(distribuicaoRepository)
                 .familiaRepository(familiaRepository)
+                .classificarFamilia(classificarFamilia)
+                .jobLauncher(jobLauncher)
                 .build();
     }
 
@@ -64,19 +79,11 @@ public class RealizarDistribuicaoUsecaseTest {
     }
 
     @Test
-    public void deveRealizarDistribuicao() {
+    public void deveRealizarDistribuicao() throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
         int qtdCasas = 3;
         int qtdTotalFamilias = 5;
-        List<Familia> familiasMock = mockFamiliaList(qtdTotalFamilias);
+        List<Familia> familiasContempladasMock = mockFamiliasContempladas(qtdTotalFamilias);
 
-        Mockito.when(familiaRepository.findAll())
-                .thenReturn(familiasMock);
-
-        List<Familia> familiasContempladasMock = familiasMock
-                .stream()
-                .sorted(Comparator.comparing(Familia::getPontuacao).reversed())
-                .limit(qtdCasas)
-                .toList();
         Mockito.when(familiaRepository.findByDistribuicaoIsNullOrderByPontuacaoDesc(qtdCasas))
                 .thenReturn(familiasContempladasMock);
 
@@ -87,16 +94,17 @@ public class RealizarDistribuicaoUsecaseTest {
                         .build()
         );
 
-        Mockito.verify(familiaRepository, Mockito.times(2)).saveAll(listFamiliaCaptor.capture());
+        Mockito.verify(familiaRepository, Mockito.times(1)).saveAll(listFamiliaCaptor.capture());
+        Mockito.verify(jobLauncher, Mockito.times(1)).run(Mockito.eq(classificarFamilia), Mockito.any());
         Assert.assertEquals(distribuicao.getFamiliasContempladas().size(), familiasContempladasMock.size());
         Assert.assertEquals(RealizarDistribuicaoConverter.converter(familiasContempladasMock), distribuicao);
     }
 
     @Test(expected = DistribuicaoIncompletaException.class)
-    public void deveFalharAoTentarRealizarDistribuicaoSemFamiliasElegiveis() {
+    public void deveFalharAoTentarRealizarDistribuicaoSemFamiliasElegiveis() throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
         int qtdCasas = faker.number().numberBetween(2, 20);
         Mockito.when(familiaRepository.findByDistribuicaoIsNullOrderByPontuacaoDesc(qtdCasas))
-                .thenReturn(mockFamiliaList(qtdCasas - 1));
+                .thenReturn(mockFamiliasContempladas(qtdCasas - 1));
 
         usecase.realizarDistribuicao(
                 RealizarDistribuicaoInput
@@ -106,10 +114,13 @@ public class RealizarDistribuicaoUsecaseTest {
         );
     }
 
-    private List<Familia> mockFamiliaList(int qtdFamilia) {
-        return IntStream.rangeClosed(1, qtdFamilia)
+    private List<Familia> mockFamiliasContempladas(int qtdCasas) {
+
+        return IntStream.rangeClosed(1, qtdCasas)
                 .boxed()
                 .map(integer -> mockFamilia(faker.number().numberBetween(3, 6)))
+                .sorted(Comparator.comparing(Familia::getPontuacao).reversed())
+                .limit(qtdCasas)
                 .toList();
     }
 

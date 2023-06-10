@@ -1,5 +1,6 @@
 package br.com.jorge.habita.application.batch.familia.classificar;
 
+import br.com.jorge.habita.application.batch.familia.classificar.launcher.ClassificarFamiliaJobLauncher;
 import org.junit.jupiter.api.Test;
 import org.springframework.batch.core.BatchStatus;
 import org.springframework.batch.core.Job;
@@ -23,16 +24,19 @@ class ClassificarFamiliaJobTest {
     @Autowired
     private JobLauncherTestUtils jobLauncherTestUtils;
 
+    @Autowired
+    private ClassificarFamiliaJobLauncher classificarFamiliaJobLauncher;
+
     @Test
     void deveExecutarJobClassificarFamiliaEFinalizarComSucesso(
             @Qualifier("classificarFamilia") Job classificarFamilia
     ) throws Exception {
+        jobLauncherTestUtils.setJobLauncher(classificarFamiliaJobLauncher);
         jobLauncherTestUtils.setJob(classificarFamilia);
         JobExecution jobExecution = jobLauncherTestUtils.launchJob();
         assertEquals(BatchStatus.COMPLETED, jobExecution.getStatus());
 
-        jobExecution.getStepExecutions().forEach(stepExecution -> {
-            assertEquals(BatchStatus.COMPLETED, stepExecution.getStatus());
-        });
+        jobExecution.getStepExecutions()
+                .forEach(stepExecution -> assertEquals(BatchStatus.COMPLETED, stepExecution.getStatus()));
     }
 }
