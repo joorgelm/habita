@@ -1,7 +1,25 @@
-<!-- SOBRE O PROJETO -->
-## API Rest para o gerenciamento de casas populares
+<style>
+  .centered-text {
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+  }
+</style>
 
-Autor: Jorge Melgarejo
+<!-- SOBRE O PROJETO -->
+<div class="centered-text">
+
+<img src="./habita.png" alt="Alt Text" width="65%">
+
+Habita - API REST para distribuição de casas populares
+</div>
+
+Habita é uma aplicação desenvolvida para atender uma demanda governamental de cadastro e distribuição
+de casas populares. Suas principais funcionalidades são:
+
+* Cadastro de famílias.
+* Classificação de famílias com base em critérios de avaliação.
+* Distribuição de casas de acordo com a pontuação de cada família.
 
 ### Tecnologias utilizadas
 
@@ -9,9 +27,9 @@ Autor: Jorge Melgarejo
 * Spring Boot 3
 * PostgresSQL
 * H2 Database
+* Spring Batch 5.0
 * Maven
 * Docker
-
 
 
 <!-- INICIANDO PROJETO -->
@@ -128,7 +146,7 @@ Segue uma descrição básica de cada entidade do projeto:
 ## Arquitetura
 A aplicação foi implementada utilizando a seguinte arquitetura:
 * **adapter** :Responsável por tratar as operações de entrada e saída de dados, persistir no banco de dados e produzir os Beans da injeção de dependências.
-* **application**:Contém os casos de uso da aplicação, realiza operações utilizando as entidades e é responsável pela conversão de dados exigidos pela camada superior (adapter). _**(Não depende do framework Spring, apenas Java)**_.
+* **application**:Contém os casos de uso da aplicação, realiza operações utilizando as entidades e é responsável pela conversão de dados exigidos pela camada.
 * **domain**:Contém as regras de negócio, os critérios de avaliação familiar e as entidades. _**(Não depende do framework Spring, apenas Java)**_.
 
 ## Implementação dos critérios de avaliação familiar
@@ -180,15 +198,5 @@ public class StrategyFactory {
 
 Feito isso, ao realizar uma distribuição, o novo critério de avaliação já será utilizado na análise familiar.
 
-
-## Observações
-
-Durante o desenvolvimento foram identificadas algumas possíveis melhorias que não foram implementadas prezando pela 
-simplicidade da solução e tendo em vista respeitar o prazo limite de entrega. São essas:
-
-* Ter um cadastro de membros familiares mais completo, recebendo CPF, e renda por pessoa (atualmente a renda é uma informação única por família).
-* Adicionar um atributo booleano para ativar ou desativar um critério de avaliação.
-* Implementar um critério de desempate para famílias com a mesma pontuação final.
-* Adicionar uma autenticação de usuários e uma camada de segurança para permitir que apenas usuários autenticados realizem o cadastro de famílias e distribuições.
-* O endpoint de realizar distribuição, realiza uma consulta que pode se tornar um problema caso exista uma grande massa de dados. Portanto, poderia ser feita de forma paginada para não carregar tantos dados em memória.
-
+## Author
+Jorge Melgarejo, melgarejo.colarte@gmail.com
