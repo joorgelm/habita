@@ -1,5 +1,6 @@
+
 <!-- SOBRE O PROJETO -->
-<div class="centered-text">
+<div style="text-align: center; font-size: 20px; font-weight: bold">
 
 <img src="./hbt.png" alt="Alt Text" width="65%">
 
@@ -192,12 +193,3 @@ Feito isso, ao realizar uma distribuição, o novo critério de avaliação já 
 
 ## Author
 Jorge Melgarejo, melgarejo.colarte@gmail.com
-
-
-<style>
-  .centered-text {
-    text-align: center;
-    font-size: 20px;
-    font-weight: bold;
-  }
-</style>
