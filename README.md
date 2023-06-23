@@ -1,11 +1,11 @@
 
 <!-- SOBRE O PROJETO -->
-<div style="text-align: center; font-size: 20px; font-weight: bold">
-
+<p align="center">
 <img src="./hbt.png" alt="Alt Text" width="65%">
+</p>
 
-Habita - API REST para distribuição de casas populares
-</div>
+<b><p align="center">Habita - API REST para distribuição de casas populares </p></b>
+
 
 Habita é uma aplicação desenvolvida para atender uma demanda governamental de cadastro e distribuição
 de casas populares. Suas principais funcionalidades são:
