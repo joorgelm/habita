@@ -191,5 +191,5 @@ public class StrategyFactory {
 
 Feito isso, ao realizar uma distribuição, o novo critério de avaliação já será utilizado na análise familiar.
 
-## Author
+## Autor
 Jorge Melgarejo, melgarejo.colarte@gmail.com
