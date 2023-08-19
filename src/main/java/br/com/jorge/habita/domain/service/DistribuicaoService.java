@@ -11,7 +11,7 @@ import java.util.List;
 public class DistribuicaoService {
 
     public List<Familia> homologarDistribuicao(List<Familia> familiasContempladas, Distribuicao distribuicao) {
-        familiasContempladas.forEach(familia -> familia.setDistribuicao(distribuicao));
+//        familiasContempladas.forEach(familia -> familia.setDistribuicao(distribuicao));
 
         return familiasContempladas;
     }

@@ -17,7 +17,7 @@ public class RendaStrategy  implements CriterioAvalicaoStrategy {
 
     @Override
     public int obterPontuacao(Familia familia) {
-        BigDecimal rendaTotal = familia.getRendaTotal();
+        BigDecimal rendaTotal = familia.getRenda();
 
         if (rendaTotalMenorIgualRendaMinima(rendaTotal)) {
             return PONTUACAO_MAXIMA;

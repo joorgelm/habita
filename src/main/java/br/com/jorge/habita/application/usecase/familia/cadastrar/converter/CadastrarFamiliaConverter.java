@@ -8,20 +8,12 @@ import lombok.experimental.UtilityClass;
 import java.time.LocalDateTime;
 
 @UtilityClass
-public class CadastrarFamiliaConverter {
+public class CadastrarFamiliaConverter { //todo: remover
     public static Familia converter(CadastrarFamiliaInput input) {
-        return Familia.builder()
-                .dataCadastro(LocalDateTime.now())
-                .rendaTotal(input.getRendaTotal())
-                .build();
+        return null;
     }
 
     public static Membro converter(CadastrarFamiliaInput.Membro input , Familia familia) {
-        return Membro
-                .builder()
-                .familia(familia)
-                .idade(input.getIdade())
-                .nome(input.getNome())
-                .build();
+        return Membro.of(input, familia);
     }
 }

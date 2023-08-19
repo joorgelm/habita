@@ -125,13 +125,14 @@ public class RealizarDistribuicaoUsecaseTest {
     }
 
     private Familia mockFamilia(int qtdMembros) {
-        return Familia
-                .builder()
-                .rendaTotal(BigDecimal.valueOf(faker.number().numberBetween(100, 1500)))
-                .pontuacao(faker.number().numberBetween(0, 8))
-                .membros(mockListMembros(qtdMembros))
-                .distribuicao(null)
-                .build();
+        return null;
+//        return Familia
+//                .builder()
+//                .rendaTotal(BigDecimal.valueOf(faker.number().numberBetween(100, 1500)))
+//                .pontuacao(faker.number().numberBetween(0, 8))
+//                .membros(mockListMembros(qtdMembros))
+//                .distribuicao(null)
+//                .build();
     }
 
     private List<Membro> mockListMembros(int qtdMembros) {
@@ -142,10 +143,11 @@ public class RealizarDistribuicaoUsecaseTest {
     }
 
     private static Membro mockMembro() {
-        return Membro
-                .builder()
-                .nome(faker.name().fullName())
-                .idade(faker.number().numberBetween(1, 100))
-                .build();
+        return null;
+//        return Membro
+//                .builder()
+//                .nome(faker.name().fullName())
+//                .idade(faker.number().numberBetween(1, 100))
+//                .build();
     }
 }

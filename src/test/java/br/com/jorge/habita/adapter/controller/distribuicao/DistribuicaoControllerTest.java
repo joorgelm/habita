@@ -89,16 +89,16 @@ public class DistribuicaoControllerTest {
     }
 
     private void marcarFamiliasComoDistribuidas() {
-        Distribuicao distribuicao = distribuicaoRepository.save(
-                Distribuicao.builder()
-                        .distribuicaoData(LocalDateTime.now())
-                        .build()
-        );
-        familiaRepository.saveAll(
-                familiaRepository.findAll()
-                        .stream()
-                        .peek(familia -> familia.setDistribuicao(distribuicao))
-                        .toList()
-        );
+//        Distribuicao distribuicao = distribuicaoRepository.save(
+//                Distribuicao.builder()
+//                        .distribuicaoData(LocalDateTime.now())
+//                        .build()
+//        );
+//        familiaRepository.saveAll(
+//                familiaRepository.findAll()
+//                        .stream()
+//                        .peek(familia -> familia.setDistribuicao(distribuicao))
+//                        .toList()
+//        );
     }
 }

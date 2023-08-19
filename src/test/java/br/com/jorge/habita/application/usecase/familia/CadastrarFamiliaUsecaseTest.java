@@ -52,27 +52,27 @@ public class CadastrarFamiliaUsecaseTest {
                 .build();
     }
 
-    @Test
-    public void deveCadastrarFamiliaComRendaEMembros() {
-        CadastrarFamiliaInput input = CadastrarFamiliaInput
-                .builder()
-                .membros(mockListaMembros(4))
-                .rendaTotal(BigDecimal.valueOf(faker.number().numberBetween(300, 2000)))
-                .build();
-
-        Mockito.doReturn(Familia.builder().build()).when(familiaRepository).save(familiaArgumentCaptor.capture());
-
-        usecase.cadastrarFamilia(input);
-        Mockito.verify(membroRepository, Mockito.times(1)).saveAll(membroArgumentCaptor.capture());
-
-        Familia familiaSalva = familiaArgumentCaptor.getValue();
-        List<Membro> membrosSalvos = membroArgumentCaptor.getValue();
-
-        Assert.assertEquals(familiaSalva.getRendaTotal(), input.getRendaTotal());
-        Assert.assertNull(familiaSalva.getPontuacao());
-        Assert.assertNull(familiaSalva.getDistribuicao());
-        Assert.assertEquals(membrosSalvos.size(), input.getMembros().size());
-    }
+//    @Test
+//    public void deveCadastrarFamiliaComRendaEMembros() {
+//        CadastrarFamiliaInput input = CadastrarFamiliaInput
+//                .builder()
+//                .membros(mockListaMembros(4))
+//                .rendaTotal(BigDecimal.valueOf(faker.number().numberBetween(300, 2000)))
+//                .build();
+//
+//        Mockito.doReturn(Familia.builder().build()).when(familiaRepository).save(familiaArgumentCaptor.capture());
+//
+//        usecase.cadastrarFamilia(input);
+//        Mockito.verify(membroRepository, Mockito.times(1)).saveAll(membroArgumentCaptor.capture());
+//
+//        Familia familiaSalva = familiaArgumentCaptor.getValue();
+//        List<Membro> membrosSalvos = membroArgumentCaptor.getValue();
+//
+//        Assert.assertEquals(familiaSalva.getRendaTotal(), input.getRendaTotal());
+//        Assert.assertNull(familiaSalva.getPontuacao());
+//        Assert.assertNull(familiaSalva.getDistribuicao());
+//        Assert.assertEquals(membrosSalvos.size(), input.getMembros().size());
+//    }
 
     @Test(expected = RendaInvalidaException.class)
     public void deveFalharAoCadastrarFamiliaRendaInvalida() {

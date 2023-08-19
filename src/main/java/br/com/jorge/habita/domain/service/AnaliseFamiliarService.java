@@ -11,12 +11,12 @@ public class AnaliseFamiliarService {
     private List<CriterioAvalicaoStrategy> criterioAvalicaoStrategies;
 
     public void atualizarPontuacao(Familia familia) {
-        familia.setPontuacao(
-                criterioAvalicaoStrategies
-                        .stream()
-                        .map(criterioAvalicaoStrategy -> calcularPontuacao(familia, criterioAvalicaoStrategy))
-                        .reduce(0, Integer::sum)
-        );
+//        familia.setPontuacao(
+//                criterioAvalicaoStrategies
+//                        .stream()
+//                        .map(criterioAvalicaoStrategy -> calcularPontuacao(familia, criterioAvalicaoStrategy))
+//                        .reduce(0, Integer::sum)
+//        );
     }
 
     private Integer calcularPontuacao(Familia familia, CriterioAvalicaoStrategy criterioAvalicaoStrategies) {
