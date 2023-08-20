@@ -1,0 +1,100 @@
+package br.com.jorge.habita.application.service.familia;
+
+import br.com.jorge.habita.application.batch.familia.classificar.launcher.ClassificarFamiliaJobLauncher;
+import br.com.jorge.habita.application.repository.FamiliaRepository;
+import br.com.jorge.habita.application.service.familia.io.FamiliaInput;
+import br.com.jorge.habita.application.service.membro.MembroService;
+import br.com.jorge.habita.domain.entity.Familia;
+import net.datafaker.Faker;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.batch.core.Job;
+
+import java.math.BigDecimal;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.*;
+
+@RunWith(MockitoJUnitRunner.class)
+public class FamiliaServiceTest {
+
+    @Mock
+    private FamiliaRepository familiaRepository;
+
+    @Mock
+    private MembroService membroService;
+
+    @Mock
+    private ClassificarFamiliaJobLauncher jobLauncher;
+
+    @Mock
+    private Job classificarFamilia;
+
+    @Captor
+    private ArgumentCaptor<Familia> familiaArgumentCaptor;
+
+    private FamiliaService familiaService;
+
+    private static final Faker faker = new Faker();
+
+    @Before
+    public void setUp() {
+        this.familiaService = new FamiliaServiceImpl(
+                familiaRepository,
+                membroService,
+                jobLauncher,
+                classificarFamilia
+        );
+    }
+
+    @Test
+    public void deveCadastrarFamilia() {
+        List<FamiliaInput.Membro> membroList = List.of(mock(FamiliaInput.Membro.class));
+        Familia mockFamiliaRetornadaPelaRepository = mock(Familia.class);
+        FamiliaInput input = FamiliaInput
+                .builder()
+                .membros(membroList)
+                .rendaTotal(BigDecimal.valueOf(faker.number().numberBetween(300, 2000)))
+                .build();
+
+
+        when(familiaRepository.save(familiaArgumentCaptor.capture()))
+                .thenReturn(mockFamiliaRetornadaPelaRepository);
+
+        familiaService.cadastrarFamilia(input);
+
+        Familia familiaPassadaParaRepository = familiaArgumentCaptor.getValue();
+
+        verify(familiaRepository, times(1)).save(familiaPassadaParaRepository);
+        verify(membroService, times(1)).cadastrarListaDeMembros(membroList, mockFamiliaRetornadaPelaRepository);
+
+        assertNotNull(familiaPassadaParaRepository);
+        assertEquals(input.getRendaTotal(), familiaPassadaParaRepository.getRendaTotal());
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void deveFalharAoCadastrarFamiliaSemRenda() {
+        FamiliaInput input = FamiliaInput
+                .builder()
+                .build();
+
+        familiaService.cadastrarFamilia(input);
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void deveFalharAoCadastrarFamiliaComRendaNegativa() {
+        FamiliaInput input = FamiliaInput
+                .builder()
+                .rendaTotal(BigDecimal.valueOf(-10L))
+                .build();
+
+        familiaService.cadastrarFamilia(input);
+    }
+}

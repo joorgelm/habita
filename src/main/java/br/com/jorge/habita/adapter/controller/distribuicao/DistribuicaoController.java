@@ -1,10 +1,9 @@
 package br.com.jorge.habita.adapter.controller.distribuicao;
 
-import br.com.jorge.habita.application.usecase.distribuicao.RealizarDistribuicaoInput;
-import br.com.jorge.habita.application.usecase.distribuicao.RealizarDistribuicaoOutput;
-import br.com.jorge.habita.application.usecase.distribuicao.RealizarDistribuicaoUsecase;
+import br.com.jorge.habita.application.service.distribuicao.DistribuicaoService;
+import br.com.jorge.habita.application.service.distribuicao.io.DistribuicaoInput;
+import br.com.jorge.habita.application.service.distribuicao.io.DistribuicaoOutput;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,18 +13,21 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@AllArgsConstructor
 @RequestMapping(value = "distribuicao")
 public class DistribuicaoController {
 
-    private RealizarDistribuicaoUsecase realizarDistribuicaoUsecase;
+    private final DistribuicaoService distribuicaoService;
+
+    public DistribuicaoController(DistribuicaoService distribuicaoService) {
+        this.distribuicaoService = distribuicaoService;
+    }
 
     @SneakyThrows
     @PostMapping
-    public ResponseEntity<RealizarDistribuicaoOutput> realizarDistribuicao(
-            @RequestBody @Valid RealizarDistribuicaoInput realizarDistribuicaoInput
+    public ResponseEntity<DistribuicaoOutput> realizarDistribuicao(
+            @RequestBody @Valid DistribuicaoInput distribuicaoInput
     ) {
-        RealizarDistribuicaoOutput distribuicaoOutput = realizarDistribuicaoUsecase.realizarDistribuicao(realizarDistribuicaoInput);
+        DistribuicaoOutput distribuicaoOutput = distribuicaoService.realizarDistribuicaoDeCasas(distribuicaoInput.getQtdCasas());
         return new ResponseEntity<>(distribuicaoOutput, HttpStatus.OK);
     }
 }

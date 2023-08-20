@@ -22,9 +22,7 @@ public class RendaStrategyTest {
     @Test
     public void deveObterPontuacaoMaxima() {
         int pontuacaoCalculada = rendaStrategy.obterPontuacao(
-                Familia.builder()
-                        .rendaTotal(RendaStrategy.RENDA_MINIMA)
-                        .build()
+                new Familia(RendaStrategy.RENDA_MINIMA)
         );
         Assert.assertEquals(RendaStrategy.PONTUACAO_MAXIMA, pontuacaoCalculada);
     }
@@ -32,9 +30,7 @@ public class RendaStrategyTest {
     @Test
     public void deveObterPontuacaoMediaTetoRendaMaxima() {
         int pontuacaoCalculada = rendaStrategy.obterPontuacao(
-                Familia.builder()
-                        .rendaTotal(RendaStrategy.RENDA_MAXIMA)
-                        .build()
+                new Familia(RendaStrategy.RENDA_MAXIMA)
         );
         Assert.assertEquals(RendaStrategy.PONTUACAO_MEDIA, pontuacaoCalculada);
     }
@@ -42,18 +38,14 @@ public class RendaStrategyTest {
     @Test
     public void deveObterPontuacaoMedia() {
         int pontuacaoCalculada = rendaStrategy.obterPontuacao(
-                Familia.builder()
-                        .rendaTotal(BigDecimal.valueOf(faker.number().numberBetween(900, 1500)))
-                        .build()
+                new Familia(BigDecimal.valueOf(faker.number().numberBetween(900, 1500)))
         );
         Assert.assertEquals(RendaStrategy.PONTUACAO_MEDIA, pontuacaoCalculada);
     }
     @Test
     public void deveObterPontuacaoMinima() {
         int pontuacaoCalculada = rendaStrategy.obterPontuacao(
-                Familia.builder()
-                        .rendaTotal(BigDecimal.valueOf(faker.number().numberBetween(1501, 6000)))
-                        .build()
+                new Familia(BigDecimal.valueOf(faker.number().numberBetween(1501, 6000)))
         );
         Assert.assertEquals(RendaStrategy.PONTUACAO_MINIMA, pontuacaoCalculada);
     }

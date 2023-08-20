@@ -1,4 +1,4 @@
-package br.com.jorge.habita.application.usecase.familia.cadastrar;
+package br.com.jorge.habita.application.service.familia.io;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -12,7 +12,7 @@ import java.util.List;
 
 @Data
 @Builder
-public class CadastrarFamiliaInput {
+public class FamiliaInput {
 
     @NotNull(message = "Campo obrigatório")
     @Positive(message = "Renda inválida")

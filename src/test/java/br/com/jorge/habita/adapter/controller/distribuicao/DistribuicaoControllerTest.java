@@ -2,7 +2,7 @@ package br.com.jorge.habita.adapter.controller.distribuicao;
 
 import br.com.jorge.habita.application.repository.DistribuicaoRepository;
 import br.com.jorge.habita.application.repository.FamiliaRepository;
-import br.com.jorge.habita.application.usecase.distribuicao.RealizarDistribuicaoInput;
+import br.com.jorge.habita.application.service.distribuicao.io.DistribuicaoInput;
 import br.com.jorge.habita.domain.entity.Distribuicao;
 import com.google.gson.Gson;
 import org.hamcrest.Matchers;
@@ -18,8 +18,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-
-import java.time.LocalDateTime;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -42,7 +40,7 @@ public class DistribuicaoControllerTest {
 
     @Test
     public void deveRealizarDistribuicao() throws Exception {
-        RealizarDistribuicaoInput input = RealizarDistribuicaoInput.builder().qtdCasas(1).build();
+        DistribuicaoInput input = DistribuicaoInput.builder().qtdCasas(1).build();
 
         ResultActions resposta = mockMvc.perform(post("/distribuicao")
                 .content(new Gson().toJson( input))
@@ -57,7 +55,7 @@ public class DistribuicaoControllerTest {
 
     @Test
     public void deveRealizarDistribuicaoDeVariasCasas() throws Exception {
-        RealizarDistribuicaoInput input = RealizarDistribuicaoInput.builder().qtdCasas(2).build();
+        DistribuicaoInput input = DistribuicaoInput.builder().qtdCasas(2).build();
 
         ResultActions resposta = mockMvc.perform(post("/distribuicao")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -76,7 +74,7 @@ public class DistribuicaoControllerTest {
     public void deveFalharQuandoNaoHouverFamiliasElegiveis() throws Exception {
         marcarFamiliasComoDistribuidas();
 
-        RealizarDistribuicaoInput input = RealizarDistribuicaoInput.builder().qtdCasas(3).build();
+        DistribuicaoInput input = DistribuicaoInput.builder().qtdCasas(3).build();
 
         ResultActions resposta = mockMvc.perform(post("/distribuicao")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -90,9 +88,7 @@ public class DistribuicaoControllerTest {
 
     private void marcarFamiliasComoDistribuidas() {
         Distribuicao distribuicao = distribuicaoRepository.save(
-                Distribuicao.builder()
-                        .distribuicaoData(LocalDateTime.now())
-                        .build()
+                new Distribuicao()
         );
         familiaRepository.saveAll(
                 familiaRepository.findAll()

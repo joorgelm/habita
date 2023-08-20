@@ -1,18 +1,23 @@
 package br.com.jorge.habita.application.batch.familia.classificar.resources;
 
 import br.com.jorge.habita.domain.entity.Familia;
-import br.com.jorge.habita.domain.service.AnaliseFamiliarService;
+import br.com.jorge.habita.domain.strategy.CriterioAvalicaoStrategy;
 import jakarta.validation.constraints.NotNull;
-import lombok.Builder;
 import org.springframework.batch.item.ItemProcessor;
 
-@Builder
+import java.util.List;
+
 public class ClassificarFamiliaProcessor implements ItemProcessor<Familia, Familia> {
 
-    private AnaliseFamiliarService analiseFamiliarService;
+    private final List<CriterioAvalicaoStrategy> criterioAvalicaoStrategies;
+
+    public ClassificarFamiliaProcessor(List<CriterioAvalicaoStrategy> criterioAvalicaoStrategies) {
+        this.criterioAvalicaoStrategies = criterioAvalicaoStrategies;
+    }
+
     @Override
     public Familia process(@NotNull Familia familia) {
-        analiseFamiliarService.atualizarPontuacao(familia);
+        familia.atualizarPontuacao(criterioAvalicaoStrategies);
         return familia;
     }
 }
