@@ -24,7 +24,7 @@ public class ValidationHandler {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<String> handleException(RuntimeException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("requisição inválida");
     }
 
     @ExceptionHandler(Exception.class)

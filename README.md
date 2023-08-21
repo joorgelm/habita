@@ -138,9 +138,9 @@ Segue uma descrição básica de cada entidade do projeto:
 
 ## Arquitetura
 A aplicação foi implementada utilizando a seguinte arquitetura:
-* **adapter** :Responsável por tratar as operações de entrada e saída de dados, persistir no banco de dados e produzir os Beans da injeção de dependências.
-* **application**:Contém os casos de uso da aplicação, realiza operações utilizando as entidades e é responsável pela conversão de dados exigidos pela camada.
-* **domain**:Contém as regras de negócio, os critérios de avaliação familiar e as entidades. _**(Não depende do framework Spring, apenas Java)**_.
+* **adapter** :Responsável por tratar as operações de entrada e saída de dados.
+* **application**: Contém as classes de serviço, responsável por coordenar processos que envolvem a lógica de negócio presente no domínio da aplicação.
+* **domain**:Contém as entidades juntamente com suas regras de negócio e os critérios de avaliação familiar.
 
 ## Implementação dos critérios de avaliação familiar
 Os critérios de avaliação familiar são implementados através de uma interface base `CriterioAvaliacaoStrategy`.
