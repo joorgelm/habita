@@ -19,9 +19,7 @@ public class DependentesStrategyTest {
 
     @Before
     public void setup() {
-        dependentesStrategy = DependentesStrategy
-                .builder()
-                .build();
+        dependentesStrategy = new DependentesStrategy();
     }
 
     @Test

@@ -38,11 +38,9 @@ public class MembroServiceTest {
 
     @Test
     public void deveCadastrarListaDeMembros() {
-        FamiliaInput.Membro membroInput = FamiliaInput.Membro
-                .builder()
-                .nome(faker.name().fullName())
-                .idade(faker.number().numberBetween(1, 99))
-                .build();
+        FamiliaInput.Membro membroInput = new FamiliaInput.Membro(
+                faker.name().fullName(), faker.number().numberBetween(1, 99)
+        );
 
         Familia familiaMock = mock(Familia.class);
         List<FamiliaInput.Membro> membroInputList = List.of(membroInput);

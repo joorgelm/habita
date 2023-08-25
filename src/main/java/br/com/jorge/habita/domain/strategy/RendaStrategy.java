@@ -1,11 +1,9 @@
 package br.com.jorge.habita.domain.strategy;
 
 import br.com.jorge.habita.domain.entity.Familia;
-import lombok.Builder;
 
 import java.math.BigDecimal;
 
-@Builder
 public class RendaStrategy  implements CriterioAvalicaoStrategy {
 
     public static final int PONTUACAO_MAXIMA = 5;

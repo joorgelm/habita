@@ -15,7 +15,7 @@ public class RendaStrategyTest {
 
     @Before
     public void setup() {
-        rendaStrategy = RendaStrategy.builder().build();
+        rendaStrategy = new RendaStrategy();
         faker = new Faker();
     }
 

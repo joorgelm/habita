@@ -1,9 +1,7 @@
 package br.com.jorge.habita.domain.strategy;
 
 import br.com.jorge.habita.domain.entity.Familia;
-import lombok.Builder;
 
-@Builder
 public class DependentesStrategy implements CriterioAvalicaoStrategy {
 
     public static final int PONTUACAO_MAXIMA = 3;

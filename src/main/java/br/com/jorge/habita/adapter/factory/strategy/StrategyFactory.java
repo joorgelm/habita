@@ -10,11 +10,11 @@ public class StrategyFactory {
 
     @Bean
     public DependentesStrategy createDependentesStrategy() {
-        return DependentesStrategy.builder().build();
+        return new DependentesStrategy();
     }
 
     @Bean
     public RendaStrategy createRendaStrategy() {
-        return RendaStrategy.builder().build();
+        return new RendaStrategy();
     }
 }

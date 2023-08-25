@@ -1,6 +1,6 @@
 package br.com.jorge.habita.application.service.familia;
 
-import br.com.jorge.habita.application.batch.familia.classificar.launcher.ClassificarFamiliaJobLauncher;
+import br.com.jorge.habita.application.batch.familia.classificar.dispatcher.ClassificarFamiliaDispatcher;
 import br.com.jorge.habita.application.repository.FamiliaRepository;
 import br.com.jorge.habita.application.service.familia.io.FamiliaInput;
 import br.com.jorge.habita.application.service.membro.MembroService;
@@ -13,7 +13,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.batch.core.Job;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -32,10 +31,7 @@ public class FamiliaServiceTest {
     private MembroService membroService;
 
     @Mock
-    private ClassificarFamiliaJobLauncher jobLauncher;
-
-    @Mock
-    private Job classificarFamilia;
+    private ClassificarFamiliaDispatcher classificarFamiliaDispatcher;
 
     @Captor
     private ArgumentCaptor<Familia> familiaArgumentCaptor;
@@ -49,8 +45,7 @@ public class FamiliaServiceTest {
         this.familiaService = new FamiliaServiceImpl(
                 familiaRepository,
                 membroService,
-                jobLauncher,
-                classificarFamilia
+                classificarFamiliaDispatcher
         );
     }
 
@@ -58,11 +53,11 @@ public class FamiliaServiceTest {
     public void deveCadastrarFamilia() {
         List<FamiliaInput.Membro> membroList = List.of(mock(FamiliaInput.Membro.class));
         Familia mockFamiliaRetornadaPelaRepository = mock(Familia.class);
-        FamiliaInput input = FamiliaInput
-                .builder()
-                .membros(membroList)
-                .rendaTotal(BigDecimal.valueOf(faker.number().numberBetween(300, 2000)))
-                .build();
+
+        FamiliaInput input = new FamiliaInput(
+                BigDecimal.valueOf(faker.number().numberBetween(300, 2000)),
+                membroList
+        );
 
 
         when(familiaRepository.save(familiaArgumentCaptor.capture()))
@@ -81,19 +76,14 @@ public class FamiliaServiceTest {
 
     @Test(expected = IllegalStateException.class)
     public void deveFalharAoCadastrarFamiliaSemRenda() {
-        FamiliaInput input = FamiliaInput
-                .builder()
-                .build();
+        FamiliaInput input = new FamiliaInput(null, null);
 
         familiaService.cadastrarFamilia(input);
     }
 
     @Test(expected = IllegalStateException.class)
     public void deveFalharAoCadastrarFamiliaComRendaNegativa() {
-        FamiliaInput input = FamiliaInput
-                .builder()
-                .rendaTotal(BigDecimal.valueOf(-10L))
-                .build();
+        FamiliaInput input = new FamiliaInput(BigDecimal.valueOf(-10L), null);
 
         familiaService.cadastrarFamilia(input);
     }

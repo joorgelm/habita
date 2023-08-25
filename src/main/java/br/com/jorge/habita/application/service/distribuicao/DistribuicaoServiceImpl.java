@@ -7,10 +7,6 @@ import br.com.jorge.habita.application.service.familia.io.FamiliaOutput;
 import br.com.jorge.habita.domain.entity.Distribuicao;
 import br.com.jorge.habita.domain.entity.Familia;
 import jakarta.transaction.Transactional;
-import org.springframework.batch.core.JobParametersInvalidException;
-import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
-import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
-import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,7 +24,7 @@ public class DistribuicaoServiceImpl implements DistribuicaoService {
 
     @Transactional
     @Override
-    public DistribuicaoOutput realizarDistribuicaoDeCasas(int qtdCasas) throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
+    public DistribuicaoOutput realizarDistribuicaoDeCasas(int qtdCasas) {
         List<Familia> familiasContempladas = this.familiaService.buscarFamiliasContempladas(qtdCasas);
         Distribuicao distribuicao = gerarRegistroDistribuicao();
         List<FamiliaOutput> familiaOutputList = homologarDistribuicao(familiasContempladas, distribuicao);

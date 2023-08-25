@@ -17,8 +17,6 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -28,7 +26,6 @@ import java.util.stream.Stream;
 
 @Entity
 @SequenceGenerator(name = "seq_familia", sequenceName = "seq_familia_id", allocationSize = 1)
-@Getter
 public class Familia implements DataValidation {
 
     private static final int IDADE_MAXIMA = 18;
@@ -48,7 +45,6 @@ public class Familia implements DataValidation {
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "distribuicao_id", referencedColumnName = "id")
-    @Setter
     private Distribuicao distribuicao;
 
     @OneToMany(mappedBy = "familia", fetch = FetchType.EAGER)
@@ -98,5 +94,33 @@ public class Familia implements DataValidation {
         this.membros = Stream
                 .concat(membroList.stream(), Stream.of(membro))
                 .toList();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public BigDecimal getRendaTotal() {
+        return rendaTotal;
+    }
+
+    public Integer getPontuacao() {
+        return pontuacao;
+    }
+
+    public Distribuicao getDistribuicao() {
+        return distribuicao;
+    }
+
+    public List<Membro> getMembros() {
+        return membros;
+    }
+
+    public LocalDateTime getDataCadastro() {
+        return dataCadastro;
+    }
+
+    public void setDistribuicao(Distribuicao distribuicao) {
+        this.distribuicao = distribuicao;
     }
 }

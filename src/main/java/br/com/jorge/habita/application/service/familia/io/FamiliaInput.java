@@ -1,36 +1,55 @@
 package br.com.jorge.habita.application.service.familia.io;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-import lombok.Builder;
-import lombok.Data;
-
 import java.math.BigDecimal;
 import java.util.List;
 
-@Data
-@Builder
 public class FamiliaInput {
 
-    @NotNull(message = "Campo obrigatório")
-    @Positive(message = "Renda inválida")
     private BigDecimal rendaTotal;
 
-    @NotEmpty(message = "Campo obrigatório")
     private List<Membro> membros;
 
-    @Data
-    @Builder
+    public void setRendaTotal(BigDecimal rendaTotal) {
+        this.rendaTotal = rendaTotal;
+    }
+
+    public void setMembros(List<Membro> membros) {
+        this.membros = membros;
+    }
+
     public static class Membro {
 
-        @NotNull(message = "Campo obrigatório")
-        @NotBlank(message = "Nome inválido")
         private String nome;
 
-        @NotNull(message = "Campo obrigatório")
-        @Positive(message = "Renda inválida")
         private Integer idade;
+
+        public Membro(String nome, Integer idade) {
+            this.nome = nome;
+            this.idade = idade;
+        }
+
+        public String getNome() {
+            return nome;
+        }
+
+        public Integer getIdade() {
+            return idade;
+        }
+    }
+
+    public FamiliaInput() {
+    }
+
+    public FamiliaInput(BigDecimal rendaTotal, List<Membro> membros) {
+        this.rendaTotal = rendaTotal;
+        this.membros = membros;
+    }
+
+    public BigDecimal getRendaTotal() {
+        return rendaTotal;
+    }
+
+    public List<Membro> getMembros() {
+        return membros;
     }
 }

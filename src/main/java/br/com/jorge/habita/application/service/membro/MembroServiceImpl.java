@@ -21,12 +21,6 @@ public class MembroServiceImpl implements MembroService {
     @Transactional
     @Override
     public void cadastrarListaDeMembros(List<FamiliaInput.Membro> membros, Familia familia) {
-
-        List<Membro> membrosToSave = membros
-                .stream()
-                .map(membro -> Membro.of(membro, familia))
-                .toList();
-
-        membroRepository.saveAll(membrosToSave);
+        membroRepository.saveAll(Membro.of(membros, familia));
     }
 }

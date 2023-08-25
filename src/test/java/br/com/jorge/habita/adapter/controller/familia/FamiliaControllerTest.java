@@ -53,7 +53,7 @@ public class FamiliaControllerTest {
                 .content(new Gson().toJson( input)));
 
         resposta.andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.rendaTotal").value("Renda inválida"));
+                .andExpect(jsonPath("$").value("rendaTotal deve ser maior que 0"));
     }
 
     @Test
@@ -66,7 +66,7 @@ public class FamiliaControllerTest {
                 .content(new Gson().toJson( input)));
 
         resposta.andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.rendaTotal").value("Campo obrigatório"));
+                .andExpect(jsonPath("$").value("rendaTotal não deve ser nulo"));
     }
 
     @Test
@@ -79,15 +79,14 @@ public class FamiliaControllerTest {
                 .content(new Gson().toJson( input)));
 
         resposta.andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.membros").value("Campo obrigatório"));
+                .andExpect(jsonPath("$").value("membros não deve ser nulo"));
     }
 
     private FamiliaInput criarInput() {
-        return FamiliaInput
-                .builder()
-                .rendaTotal(BigDecimal.valueOf(faker.number().numberBetween(100L, 1600L)))
-                .membros(criarListaDeMembros(faker.number().numberBetween(2, 7)))
-                .build();
+        return new FamiliaInput(
+                BigDecimal.valueOf(faker.number().numberBetween(100L, 1600L)),
+                criarListaDeMembros(faker.number().numberBetween(2, 7))
+        );
     }
 
     private static List<FamiliaInput.Membro> criarListaDeMembros(int tamanho) {
@@ -98,10 +97,9 @@ public class FamiliaControllerTest {
     }
 
     private static FamiliaInput.Membro criarMembro() {
-        return FamiliaInput.Membro
-                .builder()
-                .nome(faker.name().fullName())
-                .idade(faker.number().numberBetween(1, 99))
-                .build();
+        return new FamiliaInput.Membro(
+                faker.name().fullName(),
+                faker.number().numberBetween(1, 99)
+        );
     }
 }

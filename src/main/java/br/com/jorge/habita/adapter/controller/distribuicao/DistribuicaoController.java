@@ -3,8 +3,6 @@ package br.com.jorge.habita.adapter.controller.distribuicao;
 import br.com.jorge.habita.application.service.distribuicao.DistribuicaoService;
 import br.com.jorge.habita.application.service.distribuicao.io.DistribuicaoInput;
 import br.com.jorge.habita.application.service.distribuicao.io.DistribuicaoOutput;
-import jakarta.validation.Valid;
-import lombok.SneakyThrows;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -22,10 +20,9 @@ public class DistribuicaoController {
         this.distribuicaoService = distribuicaoService;
     }
 
-    @SneakyThrows
     @PostMapping
     public ResponseEntity<DistribuicaoOutput> realizarDistribuicao(
-            @RequestBody @Valid DistribuicaoInput distribuicaoInput
+            @RequestBody DistribuicaoInput distribuicaoInput
     ) {
         DistribuicaoOutput distribuicaoOutput = distribuicaoService.realizarDistribuicaoDeCasas(distribuicaoInput.getQtdCasas());
         return new ResponseEntity<>(distribuicaoOutput, HttpStatus.OK);

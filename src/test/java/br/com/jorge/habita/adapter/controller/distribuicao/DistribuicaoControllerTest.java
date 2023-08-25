@@ -40,7 +40,7 @@ public class DistribuicaoControllerTest {
 
     @Test
     public void deveRealizarDistribuicao() throws Exception {
-        DistribuicaoInput input = DistribuicaoInput.builder().qtdCasas(1).build();
+        DistribuicaoInput input = new DistribuicaoInput(1);
 
         ResultActions resposta = mockMvc.perform(post("/distribuicao")
                 .content(new Gson().toJson( input))
@@ -55,7 +55,7 @@ public class DistribuicaoControllerTest {
 
     @Test
     public void deveRealizarDistribuicaoDeVariasCasas() throws Exception {
-        DistribuicaoInput input = DistribuicaoInput.builder().qtdCasas(2).build();
+        DistribuicaoInput input = new DistribuicaoInput(2);
 
         ResultActions resposta = mockMvc.perform(post("/distribuicao")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -74,7 +74,7 @@ public class DistribuicaoControllerTest {
     public void deveFalharQuandoNaoHouverFamiliasElegiveis() throws Exception {
         marcarFamiliasComoDistribuidas();
 
-        DistribuicaoInput input = DistribuicaoInput.builder().qtdCasas(3).build();
+        DistribuicaoInput input = new DistribuicaoInput(3);
 
         ResultActions resposta = mockMvc.perform(post("/distribuicao")
                 .contentType(MediaType.APPLICATION_JSON)
